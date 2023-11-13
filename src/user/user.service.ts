@@ -18,20 +18,14 @@ export class UserService {
     const saltOrRounds = 10;
 
     const passwordHash = await hash(CreateUserDto.password, saltOrRounds);
-    const user: UserEntity = {
+
+    return this.userRepository.save({
       ...CreateUserDto,
-      id: this.users.length + 1,
       password: passwordHash,
-    };
-
-    this.users.push(user);
-
-    //console.log('Senha= ', passwordHash);
-
-    return user;
+    });
   }
 
   async getAllUser(): Promise<UserEntity[]> {
-    return this.users;
+    return this.userRepository.find();
   }
 }
