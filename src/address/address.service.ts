@@ -1,3 +1,5 @@
+import { CityService } from 'src/city/city.service';
+import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
@@ -11,12 +13,17 @@ export class AddressService {
   constructor(
     @InjectRepository(AddressEntity)
     private readonly addressRepository: Repository<AddressEntity>,
+    private readonly userService: UserService,
+    private readonly cityService: CityService,
   ) {}
 
   async createAddress(
     createAddressDto: CreateAddressDto,
     userId: number,
   ): Promise<AddressEntity> {
+    // Validar o usuário
+    await this.userService.findUserById(userId);
+    await this.cityService.findCityById(createAddressDto.cityId);
     return this.addressRepository.save({
       ...createAddressDto,
       userId,
