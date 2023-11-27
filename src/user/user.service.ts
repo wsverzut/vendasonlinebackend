@@ -59,4 +59,19 @@ export class UserService {
 
     return user;
   }
+
+  async findUserByEmail(email: string): Promise<UserEntity> {
+    // Recuperar o registro
+    const user = await this.userRepository.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`E-mail: ${email} Not Found`);
+    }
+
+    return user;
+  }
 }
